@@ -1,0 +1,244 @@
+SELECT COUNT(*)
+FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS;
+
+---
+
+SELECT * FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS
+WHERE transactions_id IS NULL;
+
+----
+
+SELECT * FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS
+WHERE sale_date IS NULL;
+
+-----
+
+SELECT * FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS
+WHERE sale_time IS NULL;
+
+----
+
+SELECT * FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS
+	WHERE 
+	transactions_id IS NULL
+	OR
+	 sale_date IS NULL
+	OR
+	 sale_time IS NULL
+	OR
+	customer_id IS NULL
+	OR
+	gender IS NULL
+	OR
+	age IS NULL
+	OR
+	category IS NULL
+	OR
+	quantiy IS NULL
+	OR
+	price_per_unit IS NULL
+	OR
+	cogs IS NULL
+	OR
+	total_sale IS NULL;
+
+-----
+
+DELETE FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS
+  
+  WHERE 
+	transactions_id IS NULL
+	OR
+	 sale_date IS NULL
+	OR
+	 sale_time IS NULL
+	OR
+	customer_id IS NULL
+	OR
+	gender IS NULL
+	OR
+	age IS NULL
+	OR
+	category IS NULL
+	OR
+	quantiy IS NULL
+	OR
+	price_per_unit IS NULL
+	OR
+	cogs IS NULL
+	OR
+	total_sale IS NULL;
+
+-----
+
+SELECT COUNT(*) AS total_sales FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS
+
+-----
+
+SELECT COUNT(customer_id) AS total_sales FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS;
+
+-----
+
+SELECT COUNT(DISTINCT customer_id) AS total_sales FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS;
+
+-----
+
+SELECT COUNT(DISTINCT category) AS total_sales FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS;
+
+-----
+
+SELECT DISTINCT category AS total_sales FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS;
+
+----- Data 
+
+SELECT *
+FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS
+WHERE sale_date = '2022-11-05';
+
+----
+
+SELECT category,
+	SUM (quantiy)
+FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS
+WHERE category = 'clothing'
+GROUP BY 1;
+
+-----
+
+SELECT *
+FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS
+WHERE category = 'clothing'
+AND TO_CHAR (sale_date 'YYYY-MM') = '2022-11'
+GROUP BY 1;
+
+-----
+
+SELECT *
+FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS
+	WHERE category = 'clothing'
+  AND
+  (sale_date) = '2022-11'
+  AND
+ quantiy >= 4;  
+
+----
+
+SELECT category 
+		SUM(total_sales) AS net_sales
+FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS
+GROUP BY 1;
+
+----
+
+SELECT category, 
+		SUM(total_sales) AS net_sales
+		COUNT (*) AS total_orders
+FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS
+GROUP BY 1;
+
+-----
+
+SELECT age
+FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS;
+
+-----
+
+SELECT *
+FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS
+WHERE category = 'beauty';
+
+-----
+
+SELECT AVG (age)
+FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS
+WHERE category = 'beauty';
+
+------
+
+SELECT ROUND( AVG (age), 2) as avg_age
+FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS
+WHERE category = 'beauty';
+
+------
+
+SELECT * FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS
+WHERE total_sale > 1000;
+
+-----
+
+SELECT category,
+	gender,
+	COUNT(*) AS total_trans
+FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS
+GROUP BY category,
+		gender
+
+-----
+
+SELECT year,
+	  month,
+	  SUM (total_sale)
+FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS;
+
+-----
+
+SELECT * 
+FROM (
+    SELECT 
+        YEAR(sale_date) AS year,
+        MONTH(sale_date) AS month,
+        AVG(TRY_CAST(total_sale AS FLOAT)) AS avg_sale,
+        RANK() OVER (
+            PARTITION BY YEAR(sale_date)
+            ORDER BY AVG(TRY_CAST(total_sale AS FLOAT)) DESC
+        ) AS month_rank
+    FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS
+    GROUP BY 
+        YEAR(sale_date), 
+        MONTH(sale_date)
+) AS TI
+WHERE month_rank = 1;
+
+-----
+
+SELECT YEAR, 
+		MONTH,
+		avg_sale
+FROM (
+    SELECT 
+        YEAR(sale_date) AS year,
+        MONTH(sale_date) AS month,
+        AVG(TRY_CAST(total_sale AS FLOAT)) AS avg_sale,
+        RANK() OVER (
+            PARTITION BY YEAR(sale_date)
+            ORDER BY AVG(TRY_CAST(total_sale AS FLOAT)) DESC
+        ) AS month_rank
+    FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS
+    GROUP BY 
+        YEAR(sale_date), 
+        MONTH(sale_date)
+) AS TI
+WHERE month_rank = 1;
+
+-----
+
+SELECT 
+    customer_id,
+    SUM(TRY_CAST(total_sale AS FLOAT)) AS total_sales
+FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS
+GROUP BY customer_id;
+
+-----
+
+SELECT 
+   category,
+   customer_id
+FROM RETAIL.dbo.TB_CG_RETAIL_CUSTOMERS;
+
+-----
+
+
+
+
+
+
