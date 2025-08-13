@@ -9,4 +9,4 @@ SQL – Linguagem principal para consultas e manipulação de dados.
 
 PostgreSQL .
 
-DB Fiddle / DBeaver / pgAdmin – Ferramentas para execução e teste das queries.
+ pgAdmin – Ferramentas para execução e teste das queries.
